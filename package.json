@@ -1,0 +1,20 @@
+{
+  "name": "nodejs-express",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/KevinSebaLee/NodeJS-Express#readme",
+  "bugs": {
+    "url": "https://github.com/KevinSebaLee/NodeJS-Express/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinSebaLee/NodeJS-Express.git"
+  },
+  "license": "ISC",
+  "author": "Kevin Lee, Juan Rozembein",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
