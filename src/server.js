@@ -13,6 +13,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send('Ya estoy respondiendo!');
 })
+
 app.get('/saludar/:nombre', (req, res) => {
     res.send(`Nombre: ${req.params.nombre}`);
 })
@@ -91,8 +92,44 @@ app.get('/omdb/getbyomdbid', async(req, res) =>{
     res.status(200).send(await OMDBGetByImdbID(req.query.id))
 })
 
+app.get('/alumnos', (req, res) => {
+    const alumnosArray = [];
+
+    alumnosArray.push(new Alumno("Esteban Dido", "22888444", 20));
+    alumnosArray.push(new Alumno("Matias Queroso", "28946255", 51));
+    alumnosArray.push(new Alumno("Elba Calao", "32623391", 18));
+
+    const alumnosList = alumnosArray.map((alumno) => `${alumno}`); 
+
+    res.status(200).send(alumnosList);
+})
+
+app.get('/alumnos/:dni', (req, res) => {
+    const alumnosArray = [];
+
+    alumnosArray.push(new Alumno("Esteban Dido", "22888444", 20));
+    alumnosArray.push(new Alumno("Matias Queroso", "28946255", 51));
+    alumnosArray.push(new Alumno("Elba Calao", "32623391", 18));
+
+    let dni = req.params.dni
+
+    AlumnoBuscado = new Alumno()
+
+    for(let i = 0; i < alumnosArray.length; i++){
+        if(alumnosArray[i].dni == dni){
+            AlumnoBuscado = alumnosArray[i]
+        }
+    }
+
+    if(!(AlumnoBuscado == null)){
+        res.status(200).send(AlumnoBuscado)
+    }
+    else{
+        res.status(404).send("Alumno no encontrado")
+    }
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
     console.log(`http://localhost:${port}`)
-})                          
+})
