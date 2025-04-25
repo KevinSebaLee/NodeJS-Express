@@ -10,6 +10,12 @@ const port = 3000
 app.use(cors());
 app.use(express.json());
 
+const alumnosArray = [];
+
+alumnosArray.push(new Alumno("Esteban Dido", "22888444", 20));
+alumnosArray.push(new Alumno("Matias Queroso", "28946255", 51));
+alumnosArray.push(new Alumno("Elba Calao", "32623391", 18));
+
 app.get('/', (req, res) => {
     res.send('Ya estoy respondiendo!');
 })
@@ -93,30 +99,18 @@ app.get('/omdb/getbyomdbid', async(req, res) =>{
 })
 
 app.get('/alumnos', (req, res) => {
-    const alumnosArray = [];
-
-    alumnosArray.push(new Alumno("Esteban Dido", "22888444", 20));
-    alumnosArray.push(new Alumno("Matias Queroso", "28946255", 51));
-    alumnosArray.push(new Alumno("Elba Calao", "32623391", 18));
-
     const alumnosList = alumnosArray.map((alumno) => `${alumno}`); 
 
     res.status(200).send(alumnosList);
 })
 
 app.get('/alumnos/:dni', (req, res) => {
-    const alumnosArray = [];
-
-    alumnosArray.push(new Alumno("Esteban Dido", "22888444", 20));
-    alumnosArray.push(new Alumno("Matias Queroso", "28946255", 51));
-    alumnosArray.push(new Alumno("Elba Calao", "32623391", 18));
-
     let dni = req.params.dni
 
-    AlumnoBuscado = new Alumno()
+    let AlumnoBuscado = new Alumno()
 
     for(let i = 0; i < alumnosArray.length; i++){
-        if(alumnosArray[i].dni == dni){
+        if(alumnosArray[i].dni === dni){
             AlumnoBuscado = alumnosArray[i]
         }
     }
@@ -128,6 +122,39 @@ app.get('/alumnos/:dni', (req, res) => {
         res.status(404).send("Alumno no encontrado")
     }
 })
+
+app.post('/alumnos', (req, res) => {
+    if (req.body) {
+        const { nombre, dni, edad } = req.body;
+        const nuevoAlumno = new Alumno(nombre, dni, edad);
+        
+        alumnosArray.push(nuevoAlumno);
+
+        console.log("Alumno recibido:", req.body);
+
+        res.status(201).json(nuevoAlumno);
+    } else {
+        res.status(400).send("Error: No se proporcionó información del alumno.");   
+    }
+}); 
+
+app.delete('/alumnos', (req, res) => {
+    if (req.body && req.body.dni) {
+        const dni = req.body.dni.toString();
+
+        const index = alumnosArray.findIndex(a => a.dni.toString() === dni);
+
+        if (index !== -1) {
+            const eliminado = alumnosArray.splice(index, 1);
+            res.status(200).json({ message: `Alumno con DNI ${dni} eliminado.`, alumno: eliminado });
+        } else {
+            res.status(404).send("Alumno no encontrado.");
+        }
+    } else {
+        res.status(400).send("Error: No se proporcionó información del alumno.");
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
